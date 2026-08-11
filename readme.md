@@ -4,85 +4,86 @@
 
 # Atlas
 
-**Knowledge Base powered by AI**
+**AI-Powered Knowledge Base**
 
-Projeto de estudos focado em **AI Engineering**, desenvolvido para aprender, na prática, como projetar, construir e evoluir aplicações modernas baseadas em Large Language Models (LLMs), Retrieval-Augmented Generation (RAG), bancos vetoriais e agentes inteligentes.
+An **AI Engineering learning project** focused on understanding, designing and building modern AI applications using **Large Language Models (LLMs), Retrieval-Augmented Generation (RAG), vector databases and intelligent agents**.
 
-O objetivo do projeto não é apenas utilizar IA, mas compreender toda a engenharia envolvida na construção de sistemas inteligentes escaláveis.
+The goal is not simply to use AI, but to understand the engineering behind building reliable, maintainable and scalable AI-powered systems.
 
 </div>
 
 ---
 
-# 📖 Sobre
+# 📖 About
 
-O Atlas é uma plataforma capaz de receber documentos, indexar seu conteúdo e responder perguntas utilizando IA.
+Atlas is a knowledge base designed to ingest documents, index their content and answer questions using AI.
 
-Este projeto será desenvolvido incrementalmente, simulando o fluxo de desenvolvimento encontrado em equipes de engenharia, com foco em boas práticas de arquitetura de software, separação de responsabilidades e escalabilidade.
+The project is being developed incrementally, following an engineering workflow similar to what you might find in a professional software team, with a strong focus on **software architecture, separation of responsibilities, testability and scalability**.
 
 ---
 
-# 🎯 Objetivos
+# 🎯 Goals
 
-- Construir uma API utilizando FastAPI.
-- Aprender os fundamentos de AI Engineering.
-- Implementar uma arquitetura baseada em camadas.
-- Compreender o funcionamento do RAG (Retrieval-Augmented Generation).
-- Trabalhar com bancos vetoriais.
-- Integrar LLMs através de APIs.
-- Desenvolver um projeto próximo da realidade encontrada em vagas de AI Engineer.
+- Build an API using FastAPI.
+- Learn the fundamentals of AI Engineering.
+- Apply a layered software architecture.
+- Understand and implement Retrieval-Augmented Generation (RAG).
+- Work with vector databases and semantic search.
+- Integrate LLMs through APIs.
+- Build an AI application using production-oriented engineering practices.
+- Explore the architecture and infrastructure behind modern AI systems.
 
 ---
 
 # 🗺️ Roadmap
 
-## Sprint 1 — Estrutura do Projeto
+## Sprint 1 — Project Foundation
 
-- [x] Inicialização com `uv`
-- [x] Configuração do FastAPI
-- [x] Estrutura inicial da arquitetura
-- [x] Health Check
-
----
-
-## Sprint 2 — Upload de Documentos
-
-- [ ] Upload de PDF
-- [ ] Armazenamento local
-- [ ] Cadastro do documento
-- [ ] Status de processamento
+- [x] Project initialization with `uv`
+- [x] FastAPI configuration
+- [x] Initial layered architecture
+- [x] Health check
 
 ---
 
-## Sprint 3 — Pipeline de Indexação
+## Sprint 2 — Document Upload
 
-- [ ] Extração de texto
+- [ ] PDF upload
+- [ ] Local file storage
+- [ ] Document registration
+- [ ] Processing status
+
+---
+
+## Sprint 3 — Indexing Pipeline
+
+- [ ] Text extraction
 - [ ] Chunking
-- [ ] Geração de Embeddings
-- [ ] Armazenamento no banco vetorial
+- [ ] Embedding generation
+- [ ] Vector database storage
 
 ---
 
-## Sprint 4 — Chat Inteligente
+## Sprint 4 — Intelligent Chat
 
-- [ ] Busca vetorial
-- [ ] Construção do contexto
-- [ ] Integração com LLM
-- [ ] Resposta baseada no documento
+- [ ] Vector search
+- [ ] Context construction
+- [ ] LLM integration
+- [ ] Document-grounded responses
 
 ---
 
-## Sprint 5 — Evolução
+## Sprint 5 — Evolution
 
-- [ ] Histórico de conversas
-- [ ] Múltiplos documentos
+- [ ] Conversation history
+- [ ] Multiple document support
 - [ ] Docker
-- [ ] Testes automatizados
-- [ ] Observabilidade
+- [ ] Automated tests
+- [ ] Observability
 
 ---
 
-# 🏗️ Arquitetura
+# 🏗️ Project Structure
 
 ```text
 src/
@@ -114,68 +115,71 @@ tests/
 
 ---
 
-# 🧠 Arquitetura da Solução
+# 🧠 Solution Architecture
 
 ```text
-             Upload PDF
-                  │
-                  ▼
-          FastAPI (API Layer)
-                  │
-                  ▼
-          Document Service
-                  │
-        ┌─────────┴─────────┐
-        ▼                   ▼
- Storage Service      Indexer Worker
-                            │
-                            ▼
-                      PDF Parser
-                            │
-                            ▼
-                        Chunking
-                            │
-                            ▼
-                       Embeddings
-                            │
-                            ▼
-                     Vector Database
+                 PDF Upload
+                     │
+                     ▼
+              FastAPI API Layer
+                     │
+                     ▼
+              Document Service
+                     │
+           ┌─────────┴─────────┐
+           ▼                   ▼
+     Storage Service      Indexer Worker
+                               │
+                               ▼
+                          PDF Parser
+                               │
+                               ▼
+                            Chunking
+                               │
+                               ▼
+                           Embeddings
+                               │
+                               ▼
+                        Vector Database
 
 ────────────────────────────────────────────
 
-             Pergunta do Usuário
+              User Question
                      │
                      ▼
-               Chat Service
+                Chat Service
                      │
                      ▼
-             Vector Database
-                     │
-             Chunks Relevantes
+                Vector Search
                      │
                      ▼
-                  LLM
+             Relevant Chunks
                      │
                      ▼
-                Resposta Final
+                    LLM
+                     │
+                     ▼
+               Final Answer
 ```
 
 ---
 
-# 📂 Estrutura em Camadas
+# 📂 Layered Architecture
 
-| Camada | Responsabilidade |
-|---------|------------------|
-| **API** | Recebe requisições HTTP e devolve respostas. |
-| **Schemas** | Contratos de entrada e saída da API (Pydantic). |
-| **Services** | Orquestram os casos de uso da aplicação. |
-| **Domain** | Contém as regras de negócio e entidades do sistema. |
-| **Infrastructure** | Comunicação com serviços externos (LLM, banco, storage, PDF, banco vetorial). |
-| **Core** | Configurações globais da aplicação. |
+| Layer | Responsibility |
+| --- | --- |
+| **API** | Handles HTTP requests and responses. |
+| **Schemas** | Defines API input/output contracts using Pydantic. |
+| **Services** | Orchestrates application use cases. |
+| **Domain** | Contains business rules and domain entities. |
+| **Infrastructure** | Handles external systems such as LLMs, databases, storage, PDF processing and vector stores. |
+| **Core** | Contains global application configuration. |
 
 ---
 
-# 🚀 Stack
+# 🚀 Tech Stack
+
+### Current
 
 - Python 3.14
 - FastAPI
@@ -183,7 +187,7 @@ tests/
 - Pydantic
 - uv
 
-## Tecnologias previstas
+### Planned
 
 - PostgreSQL
 - pgvector
@@ -197,104 +201,107 @@ tests/
 
 ---
 
-# ▶️ Executando o projeto
+# ▶️ Running the Project
 
-Instale as dependências:
+Install dependencies:
 
 ```bash
 uv sync
 ```
 
-Execute a aplicação:
+Run the application:
 
 ```bash
 make run
 ```
 
-A API ficará disponível em:
+The API will be available at:
 
-```
+```text
 http://localhost:8000
 ```
 
-Documentação automática:
+Interactive API documentation:
 
-```
+```text
 http://localhost:8000/docs
 ```
 
 ---
 
-# 📜 Princípios Arquiteturais
+# 📜 Architectural Principles
 
-O projeto segue alguns princípios desde sua concepção.
+Atlas follows a few principles from the beginning of its development.
 
 ### Single Responsibility Principle
 
-Cada classe possui apenas uma responsabilidade.
+Each component should have a clear and focused responsibility.
 
 ---
 
 ### Domain First
 
-As regras de negócio pertencem ao domínio, não ao framework.
+Business rules belong to the domain, not to the framework.
 
 ---
 
 ### Infrastructure Agnostic
 
-O domínio não conhece:
+The domain should not depend directly on:
 
-- Banco de dados
+- Databases
 - OpenAI
 - Ollama
 - PostgreSQL
 - FastAPI
 
-Toda infraestrutura é desacoplada.
+Infrastructure is kept behind abstractions so that implementation details can evolve independently from the domain.
 
 ---
 
-### Evolução Incremental
+### Incremental Evolution
 
-Cada funcionalidade será desenvolvida em pequenas sprints, simulando um ambiente profissional.
+Features are developed in small, incremental sprints, simulating a professional engineering workflow and making architectural decisions easier to evaluate as the project evolves.
 
 ---
 
-# 📚 Objetivos de Aprendizado
+# 📚 Learning Goals
 
-Durante o desenvolvimento do Atlas serão estudados:
+Throughout the development of Atlas, the project will explore:
 
-- Arquitetura de Software
+- Software Architecture
+- Modern Python
 - FastAPI
-- Python Moderno
 - Pydantic
 - Dependency Injection
 - RAG
 - Embeddings
-- Bancos Vetoriais
+- Vector Databases
 - Prompt Engineering
 - AI Agents
-- Observabilidade
+- Observability
 - Docker
-- Testes Automatizados
-- MLOps (introdução)
+- Automated Testing
+- MLOps fundamentals
 
 ---
 
-# 📈 Evolução do Projeto
+# 📈 Project Evolution
 
-O Atlas começou como uma Proof of Concept (PoC) para responder perguntas sobre documentos PDF.
+Atlas started as a Proof of Concept (PoC) for answering questions about PDF documents.
 
-A longo prazo, a ideia é evoluir para uma plataforma capaz de:
+The long-term goal is to evolve it into a platform capable of:
 
-- analisar repositórios GitHub;
-- gerar documentação automaticamente;
-- atuar como uma Knowledge Base inteligente;
-- servir como laboratório para estudos em AI Engineering.
+- Analyzing GitHub repositories
+- Automatically generating documentation
+- Acting as an intelligent Knowledge Base
+- Experimenting with different RAG architectures
+- Serving as a practical laboratory for AI Engineering studies
+
+The project is intentionally being developed incrementally, with each stage adding a new layer of complexity and engineering concerns.
 
 ---
 
-# 📄 Licença
+# 📄 License
 
-Projeto desenvolvido exclusivamente para fins de estudo e evolução profissional.
+This project is developed for educational purposes and professional growth.
