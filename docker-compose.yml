@@ -1,0 +1,31 @@
+services:
+  api:
+    build:
+      context: .
+    image: atlas-api:local
+    container_name: atlas-api
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    command:
+      - .venv/bin/uvicorn
+      - atlas.main:app
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8000"
+      - --reload
+      - --reload-dir
+      - /app/src
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "from urllib.request import urlopen; urlopen('http://127.0.0.1:8000/', timeout=2)"
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    volumes:
+      - ./src:/app/src
