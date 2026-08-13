@@ -27,5 +27,10 @@ htmlcov/
 # Logs
 *.log
 
+# Sended files for local storage
+storage/
+
 # macOS
 .DS_Store
+
+project-context.md

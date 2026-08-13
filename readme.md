@@ -48,8 +48,8 @@ The project is being developed incrementally, following an engineering workflow 
 
 ## Sprint 2 — Document Upload
 
-- [ ] PDF upload
-- [ ] Local file storage
+- [x] PDF upload
+- [x] Local file storage
 - [ ] Document registration
 - [ ] Processing status
 
