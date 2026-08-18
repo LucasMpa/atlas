@@ -14,6 +14,8 @@ RUN pip install --no-cache-dir uv \
 COPY --chown=app:app src ./src
 RUN uv sync --locked --no-dev
 
+RUN mkdir -p storage/documents && chown -R app:app storage
+
 USER app
 
 EXPOSE 8000
