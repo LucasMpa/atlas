@@ -1,18 +1,29 @@
+import os
 from pathlib import Path
 
 from fastapi import APIRouter, File, HTTPException, Request, UploadFile, status
 
+from atlas.api.schemas.document import DocumentResponse
+from atlas.infrastructure.database.postgres_document_repository import (
+    PostgresDocumentRepository,
+)
 from atlas.infrastructure.storage.local_file_storage import LocalFileStorage
 from atlas.services.document_service import DocumentService
 
 
 router = APIRouter(prefix="/documents", tags=["documents"])
+
+database_url = os.environ.get("DATABASE_URL")
+if not database_url:
+    raise RuntimeError("DATABASE_URL must be set to run the API.")
+
 document_service = DocumentService(
-    storage=LocalFileStorage(base_directory=Path("storage/documents"))
+    storage=LocalFileStorage(base_directory=Path("storage/documents")),
+    repository=PostgresDocumentRepository(database_url=database_url),
 )
 
 
-@router.post("")
+@router.post("", response_model=DocumentResponse)
 async def create_document(request: Request, file: UploadFile = File(...)):
     """Receive a document."""
     form = await request.form()
@@ -28,9 +39,4 @@ async def create_document(request: Request, file: UploadFile = File(...)):
             detail="Only PDF files are supported.",
         )
 
-    stored_document = document_service.store_document(file.file)
-
-    return {
-        "id": str(stored_document.id),
-        "filename": file.filename,
-    }
+    return document_service.store_document(file.filename, file.file)

@@ -22,6 +22,11 @@ services:
       context: .
     image: atlas-api:local
     container_name: atlas-api
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+    depends_on:
+      postgres:
+        condition: service_healthy
     ports:
       - "8000:8000"
     restart: unless-stopped
