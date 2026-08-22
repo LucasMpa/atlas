@@ -1,6 +1,11 @@
+import logging
+
 from fastapi import FastAPI
 
 from atlas.api.routes.documents import router as documents_router
+
+logging.basicConfig(level=logging.INFO)
+
 app = FastAPI(
     title="Atlas",
     description="Knowledge Base powered by AI",

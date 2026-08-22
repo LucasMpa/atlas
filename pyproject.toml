@@ -8,6 +8,7 @@ dependencies = [
     "alembic>=1.19.1",
     "fastapi>=0.141.1",
     "psycopg[binary]>=3.3.4",
+    "pypdf>=6.16.1",
     "python-multipart>=0.0.22",
     "uvicorn>=0.52.1",
 ]
