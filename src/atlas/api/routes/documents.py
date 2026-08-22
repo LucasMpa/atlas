@@ -7,6 +7,7 @@ from atlas.api.schemas.document import DocumentResponse
 from atlas.infrastructure.database.postgres_document_repository import (
     PostgresDocumentRepository,
 )
+from atlas.infrastructure.pdf.pdf_parser import PdfParser
 from atlas.infrastructure.storage.local_file_storage import LocalFileStorage
 from atlas.services.document_service import DocumentService
 
@@ -20,6 +21,7 @@ if not database_url:
 document_service = DocumentService(
     storage=LocalFileStorage(base_directory=Path("storage/documents")),
     repository=PostgresDocumentRepository(database_url=database_url),
+    parser=PdfParser(),
 )
 
 
