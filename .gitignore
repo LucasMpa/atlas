@@ -10,6 +10,9 @@ venv/
 .vscode/
 .idea/
 
+# Claude Code local settings (per-machine permissions, not shared config)
+.claude/settings.local.json
+
 # Environment variables
 .env
 
