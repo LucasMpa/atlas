@@ -4,6 +4,7 @@ from pathlib import Path
 from fastapi import APIRouter, File, HTTPException, Request, UploadFile, status
 
 from atlas.api.schemas.document import DocumentResponse
+from atlas.infrastructure.chunking.text_chunker import TextChunker
 from atlas.infrastructure.database.postgres_document_repository import (
     PostgresDocumentRepository,
 )
@@ -22,6 +23,7 @@ document_service = DocumentService(
     storage=LocalFileStorage(base_directory=Path("storage/documents")),
     repository=PostgresDocumentRepository(database_url=database_url),
     parser=PdfParser(),
+    chunker=TextChunker(),
 )
 
 
