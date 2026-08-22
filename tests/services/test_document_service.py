@@ -5,6 +5,7 @@ from unittest.mock import Mock
 from uuid import UUID
 
 from atlas.domain.repositories.document_repository import DocumentRepository
+from atlas.infrastructure.chunking.text_chunker import TextChunker
 from atlas.infrastructure.pdf.pdf_parser import PdfParser
 from atlas.infrastructure.storage.local_file_storage import LocalFileStorage
 from atlas.services.document_service import DocumentService
@@ -17,8 +18,13 @@ class DocumentServiceTestCase(TestCase):
         self.repository.add.side_effect = lambda document: document
         self.parser = Mock(spec=PdfParser)
         self.parser.extract_text.return_value = "extracted text"
+        self.chunker = Mock(spec=TextChunker)
+        self.chunker.split.return_value = ["extracted text"]
         self.service = DocumentService(
-            storage=self.storage, repository=self.repository, parser=self.parser
+            storage=self.storage,
+            repository=self.repository,
+            parser=self.parser,
+            chunker=self.chunker,
         )
 
     def test_store_document_generates_an_id_and_saves_the_file(self) -> None:
@@ -47,6 +53,14 @@ class DocumentServiceTestCase(TestCase):
         self.service.store_document("document.pdf", BytesIO(b"%PDF-1.4"))
 
         self.parser.extract_text.assert_called_once_with(storage_path)
+
+    def test_store_document_splits_the_extracted_text_into_chunks(self) -> None:
+        self.storage.save_pdf.return_value = Path("storage/documents/document.pdf")
+        self.parser.extract_text.return_value = "some extracted text"
+
+        self.service.store_document("document.pdf", BytesIO(b"%PDF-1.4"))
+
+        self.chunker.split.assert_called_once_with("some extracted text")
 
     def test_store_document_generates_a_unique_id_for_each_file(self) -> None:
         self.storage.save_pdf.side_effect = [

@@ -4,6 +4,7 @@ from uuid import uuid4
 
 from atlas.domain.entities.document import Document
 from atlas.domain.repositories.document_repository import DocumentRepository
+from atlas.infrastructure.chunking.text_chunker import TextChunker
 from atlas.infrastructure.pdf.pdf_parser import PdfParser
 from atlas.infrastructure.storage.local_file_storage import LocalFileStorage
 
@@ -16,10 +17,12 @@ class DocumentService:
         storage: LocalFileStorage,
         repository: DocumentRepository,
         parser: PdfParser,
+        chunker: TextChunker,
     ) -> None:
         self.storage = storage
         self.repository = repository
         self.parser = parser
+        self.chunker = chunker
 
     def store_document(self, filename: str, file_content: BinaryIO) -> Document:
         document_id = uuid4()
@@ -39,5 +42,8 @@ class DocumentService:
             len(extracted_text),
             document.id,
         )
+
+        chunks = self.chunker.split(extracted_text)
+        logger.info("Split document %s into %d chunks", document.id, len(chunks))
 
         return document
