@@ -50,8 +50,8 @@ The project is being developed incrementally, following an engineering workflow 
 
 - [x] PDF upload
 - [x] Local file storage
-- [ ] Document registration
-- [ ] Processing status
+- [x] Document registration
+- [x] Processing status
 
 ---
 
