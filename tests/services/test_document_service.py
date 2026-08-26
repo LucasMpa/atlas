@@ -5,6 +5,7 @@ from unittest.mock import Mock
 from uuid import UUID
 
 from atlas.domain.repositories.document_repository import DocumentRepository
+from atlas.domain.repositories.embedding_provider import EmbeddingProvider
 from atlas.infrastructure.chunking.text_chunker import TextChunker
 from atlas.infrastructure.pdf.pdf_parser import PdfParser
 from atlas.infrastructure.storage.local_file_storage import LocalFileStorage
@@ -20,11 +21,14 @@ class DocumentServiceTestCase(TestCase):
         self.parser.extract_text.return_value = "extracted text"
         self.chunker = Mock(spec=TextChunker)
         self.chunker.split.return_value = ["extracted text"]
+        self.embedding_provider = Mock(spec=EmbeddingProvider)
+        self.embedding_provider.embed_documents.return_value = [[0.1, 0.2, 0.3]]
         self.service = DocumentService(
             storage=self.storage,
             repository=self.repository,
             parser=self.parser,
             chunker=self.chunker,
+            embedding_provider=self.embedding_provider,
         )
 
     def test_store_document_generates_an_id_and_saves_the_file(self) -> None:
@@ -61,6 +65,24 @@ class DocumentServiceTestCase(TestCase):
         self.service.store_document("document.pdf", BytesIO(b"%PDF-1.4"))
 
         self.chunker.split.assert_called_once_with("some extracted text")
+
+    def test_store_document_generates_embeddings_for_the_chunks(self) -> None:
+        self.storage.save_pdf.return_value = Path("storage/documents/document.pdf")
+        self.chunker.split.return_value = ["chunk one", "chunk two"]
+
+        self.service.store_document("document.pdf", BytesIO(b"%PDF-1.4"))
+
+        self.embedding_provider.embed_documents.assert_called_once_with(
+            ["chunk one", "chunk two"]
+        )
+
+    def test_store_document_skips_embeddings_when_there_are_no_chunks(self) -> None:
+        self.storage.save_pdf.return_value = Path("storage/documents/document.pdf")
+        self.chunker.split.return_value = []
+
+        self.service.store_document("document.pdf", BytesIO(b"%PDF-1.4"))
+
+        self.embedding_provider.embed_documents.assert_not_called()
 
     def test_store_document_generates_a_unique_id_for_each_file(self) -> None:
         self.storage.save_pdf.side_effect = [

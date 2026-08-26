@@ -4,6 +4,7 @@ from uuid import uuid4
 
 from atlas.domain.entities.document import Document
 from atlas.domain.repositories.document_repository import DocumentRepository
+from atlas.domain.repositories.embedding_provider import EmbeddingProvider
 from atlas.infrastructure.chunking.text_chunker import TextChunker
 from atlas.infrastructure.pdf.pdf_parser import PdfParser
 from atlas.infrastructure.storage.local_file_storage import LocalFileStorage
@@ -18,11 +19,13 @@ class DocumentService:
         repository: DocumentRepository,
         parser: PdfParser,
         chunker: TextChunker,
+        embedding_provider: EmbeddingProvider,
     ) -> None:
         self.storage = storage
         self.repository = repository
         self.parser = parser
         self.chunker = chunker
+        self.embedding_provider = embedding_provider
 
     def store_document(self, filename: str, file_content: BinaryIO) -> Document:
         document_id = uuid4()
@@ -45,5 +48,11 @@ class DocumentService:
 
         chunks = self.chunker.split(extracted_text)
         logger.info("Split document %s into %d chunks", document.id, len(chunks))
+
+        if chunks:
+            embeddings = self.embedding_provider.embed_documents(chunks)
+            logger.info(
+                "Generated %d embeddings for document %s", len(embeddings), document.id
+            )
 
         return document
