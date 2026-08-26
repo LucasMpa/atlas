@@ -8,6 +8,7 @@ from atlas.infrastructure.chunking.text_chunker import TextChunker
 from atlas.infrastructure.database.postgres_document_repository import (
     PostgresDocumentRepository,
 )
+from atlas.infrastructure.llm.voyage_embedding_provider import VoyageEmbeddingProvider
 from atlas.infrastructure.pdf.pdf_parser import PdfParser
 from atlas.infrastructure.storage.local_file_storage import LocalFileStorage
 from atlas.services.document_service import DocumentService
@@ -19,11 +20,16 @@ database_url = os.environ.get("DATABASE_URL")
 if not database_url:
     raise RuntimeError("DATABASE_URL must be set to run the API.")
 
+voyage_api_key = os.environ.get("VOYAGE_API_KEY")
+if not voyage_api_key:
+    raise RuntimeError("VOYAGE_API_KEY must be set to run the API.")
+
 document_service = DocumentService(
     storage=LocalFileStorage(base_directory=Path("storage/documents")),
     repository=PostgresDocumentRepository(database_url=database_url),
     parser=PdfParser(),
     chunker=TextChunker(),
+    embedding_provider=VoyageEmbeddingProvider(api_key=voyage_api_key),
 )
 
 
