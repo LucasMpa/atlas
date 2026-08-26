@@ -57,9 +57,9 @@ The project is being developed incrementally, following an engineering workflow 
 
 ## Sprint 3 — Indexing Pipeline
 
-- [ ] Text extraction
-- [ ] Chunking
-- [ ] Embedding generation
+- [x] Text extraction
+- [x] Chunking
+- [x] Embedding generation
 - [ ] Vector database storage
 
 ---
@@ -75,10 +75,10 @@ The project is being developed incrementally, following an engineering workflow 
 
 ## Sprint 5 — Evolution
 
+- [x] Docker
+- [x] Automated tests
 - [ ] Conversation history
 - [ ] Multiple document support
-- [ ] Docker
-- [ ] Automated tests
 - [ ] Observability
 
 ---
@@ -186,27 +186,58 @@ tests/
 - Uvicorn
 - Pydantic
 - uv
+- PostgreSQL
+- Alembic
+- psycopg
+- pypdf
+- Voyage AI (embeddings)
+- Docker & Docker Compose
+- unittest
 
 ### Planned
 
-- PostgreSQL
 - pgvector
-- OpenAI API
-- Ollama
-- LangChain
-- SQLAlchemy
-- Docker
-- Pytest
+- LLM API for chat/RAG (provider not yet decided)
+- Local embedding provider (e.g. `sentence-transformers`), as a secondary/fallback option alongside Voyage AI
 - Ruff
 
 ---
 
 # ▶️ Running the Project
 
+## Environment variables
+
+```bash
+cp .env.example .env
+```
+
+Fill in `VOYAGE_API_KEY` with a free key from [voyageai.com](https://voyageai.com). The Postgres variables already work out of the box with the Docker setup below.
+
+## Option 1 — Docker Compose (recommended)
+
+```bash
+docker compose up -d --build
+```
+
+This starts PostgreSQL and the API together. Run the database migrations once:
+
+```bash
+make migrate
+```
+
+## Option 2 — Local development
+
 Install dependencies:
 
 ```bash
 uv sync
+```
+
+Start PostgreSQL and run the migrations:
+
+```bash
+docker compose up -d postgres
+make migrate
 ```
 
 Run the application:
@@ -215,16 +246,17 @@ Run the application:
 make run
 ```
 
-The API will be available at:
+Run the test suite:
 
-```text
-http://localhost:8000
+```bash
+make tests
 ```
 
-Interactive API documentation:
+## Endpoints
 
 ```text
-http://localhost:8000/docs
+http://localhost:8000       →  health check
+http://localhost:8000/docs  →  interactive API documentation (Swagger)
 ```
 
 ---
@@ -249,13 +281,11 @@ Business rules belong to the domain, not to the framework.
 
 The domain should not depend directly on:
 
-- Databases
-- OpenAI
-- Ollama
 - PostgreSQL
+- Voyage AI (or any embedding/LLM provider)
 - FastAPI
 
-Infrastructure is kept behind abstractions so that implementation details can evolve independently from the domain.
+Concrete implementations sit behind `Protocol` interfaces (e.g. `DocumentRepository`, `EmbeddingProvider`), so the application layer only knows the contract, never the specific technology. This is what allows the Postgres repository, or the Voyage embedding provider, to be swapped for a different implementation without touching the service layer.
 
 ---
 
