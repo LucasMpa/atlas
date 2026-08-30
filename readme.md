@@ -60,7 +60,7 @@ The project is being developed incrementally, following an engineering workflow 
 - [x] Text extraction
 - [x] Chunking
 - [x] Embedding generation
-- [ ] Vector database storage
+- [x] Vector database storage
 
 ---
 
@@ -191,12 +191,12 @@ tests/
 - psycopg
 - pypdf
 - Voyage AI (embeddings)
+- pgvector
 - Docker & Docker Compose
 - unittest
 
 ### Planned
 
-- pgvector
 - LLM API for chat/RAG (provider not yet decided)
 - Local embedding provider (e.g. `sentence-transformers`), as a secondary/fallback option alongside Voyage AI
 - Ruff

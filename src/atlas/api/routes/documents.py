@@ -5,6 +5,9 @@ from fastapi import APIRouter, File, HTTPException, Request, UploadFile, status
 
 from atlas.api.schemas.document import DocumentResponse
 from atlas.infrastructure.chunking.text_chunker import TextChunker
+from atlas.infrastructure.database.postgres_chunk_repository import (
+    PostgresChunkRepository,
+)
 from atlas.infrastructure.database.postgres_document_repository import (
     PostgresDocumentRepository,
 )
@@ -30,6 +33,7 @@ document_service = DocumentService(
     parser=PdfParser(),
     chunker=TextChunker(),
     embedding_provider=VoyageEmbeddingProvider(api_key=voyage_api_key),
+    chunk_repository=PostgresChunkRepository(database_url=database_url),
 )
 
 
