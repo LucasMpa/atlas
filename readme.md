@@ -66,10 +66,10 @@ The project is being developed incrementally, following an engineering workflow 
 
 ## Sprint 4 — Intelligent Chat
 
-- [ ] Vector search
-- [ ] Context construction
-- [ ] LLM integration
-- [ ] Document-grounded responses
+- [x] Vector search
+- [x] Context construction
+- [x] LLM integration
+- [x] Document-grounded responses
 
 ---
 
@@ -192,12 +192,12 @@ tests/
 - pypdf
 - Voyage AI (embeddings)
 - pgvector
+- Anthropic Claude API (chat/RAG)
 - Docker & Docker Compose
 - unittest
 
 ### Planned
 
-- LLM API for chat/RAG (provider not yet decided)
 - Local embedding provider (e.g. `sentence-transformers`), as a secondary/fallback option alongside Voyage AI
 - Ruff
 
@@ -211,7 +211,7 @@ tests/
 cp .env.example .env
 ```
 
-Fill in `VOYAGE_API_KEY` with a free key from [voyageai.com](https://voyageai.com). The Postgres variables already work out of the box with the Docker setup below.
+Fill in `VOYAGE_API_KEY` with a free key from [voyageai.com](https://voyageai.com) and `ANTHROPIC_API_KEY` with a key from [console.anthropic.com](https://console.anthropic.com) (note: this is the developer/API console — separate from a Claude.ai chat subscription, billed independently). The Postgres variables already work out of the box with the Docker setup below.
 
 ## Option 1 — Docker Compose (recommended)
 
@@ -257,6 +257,23 @@ make tests
 ```text
 http://localhost:8000       →  health check
 http://localhost:8000/docs  →  interactive API documentation (Swagger)
+```
+
+## Usage example
+
+Upload a PDF:
+
+```bash
+curl -X POST http://localhost:8000/documents \
+  -F "file=@your-document.pdf;type=application/pdf"
+```
+
+Ask a question grounded in the documents you've uploaded:
+
+```bash
+curl -X POST http://localhost:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"userPrompt": "What does the document say about X?"}'
 ```
 
 ---
