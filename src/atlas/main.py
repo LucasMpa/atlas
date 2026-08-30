@@ -2,6 +2,7 @@ import logging
 
 from fastapi import FastAPI
 
+from atlas.api.routes.chat import router as chat_router
 from atlas.api.routes.documents import router as documents_router
 
 logging.basicConfig(level=logging.INFO)
@@ -13,6 +14,7 @@ app = FastAPI(
 )
 
 app.include_router(documents_router)
+app.include_router(chat_router)
 
 
 @app.get("/")

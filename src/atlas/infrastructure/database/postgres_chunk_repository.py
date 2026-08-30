@@ -1,3 +1,4 @@
+import numpy as np
 from pgvector.psycopg import register_vector
 from psycopg import connect
 
@@ -36,3 +37,29 @@ class PostgresChunkRepository:
                 )
 
         return chunks
+
+    def find_similar(self, embedding: list[float], limit: int) -> list[Chunk]:
+        query = """
+            SELECT id, document_id, content, chunk_index, embedding, created_at
+            FROM chunks
+            ORDER BY embedding <=> %s
+            LIMIT %s
+        """
+
+        with connect(self.database_url) as connection:
+            register_vector(connection)
+            with connection.cursor() as cursor:
+                cursor.execute(query, (np.array(embedding), limit))
+                rows = cursor.fetchall()
+
+        return [
+            Chunk(
+                id=row[0],
+                document_id=row[1],
+                content=row[2],
+                chunk_index=row[3],
+                embedding=row[4].to_list(),
+                created_at=row[5],
+            )
+            for row in rows
+        ]
