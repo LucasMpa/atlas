@@ -36,4 +36,9 @@ storage/
 # macOS
 .DS_Store
 
+# webChat (Node/Vite frontend)
+webChat/node_modules/
+webChat/dist/
+webChat/.env
+
 project-context.md

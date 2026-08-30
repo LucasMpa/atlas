@@ -55,5 +55,20 @@ services:
     volumes:
       - ./src:/app/src
 
+  webchat:
+    build:
+      context: ./webChat
+    image: atlas-webchat:local
+    container_name: atlas-webchat
+    environment:
+      VITE_API_URL: http://localhost:8000
+    depends_on:
+      - api
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./webChat:/app
+      - /app/node_modules
+
 volumes:
   postgres_data:
